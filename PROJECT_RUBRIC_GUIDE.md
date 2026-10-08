@@ -1,7 +1,7 @@
-# Sono Order Lab — Final Project Rubric Alignment
+# Ultrasound Order Lab — Final Project Rubric Alignment
 
 ## Project description
-Sono Order Lab is a scripted, browser-based sonography order-verification simulation. It uses fictional orders and requisitions, branching decision scenarios, immediate feedback, browser speech synthesis, practice scores, and paired readiness/follow-up checks. It is not a live AI agent or an automated clinical decision-support tool.
+Ultrasound Order Lab is a scripted, browser-based sonography order-verification simulation. It uses fictional orders and requisitions, branching decision scenarios, immediate feedback, browser speech synthesis, practice scores, and paired readiness/follow-up checks. It is not a live AI agent or an automated clinical decision-support tool.
 
 ## 1. Selection of emerging technology
 **Instructional problem:** Students may identify missing order information on a worksheet yet struggle to respond safely when an order conflicts with a facility worklist. A web-based interactive simulation lets students rehearse the entire verification, escalation, clarification, and handoff workflow without exposing patients to risk.
