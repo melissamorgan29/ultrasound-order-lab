@@ -1,1 +1,7 @@
-Sono Order Lab — scroll-aware narration. Upload index.html to GitHub Pages and retain all JPG images in the repository root. Narration uses built-in device speech synthesis; choose an installed natural/neural female voice if available. Students can mute or replay. Browser restrictions may require a click before audio plays. Scroll guidance is spoken once per lesson view, with feedback spoken when submitted.
+Sono Order Lab — Rubric-focused upgrade
+
+Publish: Replace index.html in your GitHub repository with the one in this folder. Existing images can remain unchanged.
+
+Added: measurable objectives, technology rationale, before/after readiness checks, five-decision consequence-based capstone with guided recovery, and PROJECT_RUBRIC_GUIDE.md.
+
+This is a scripted browser simulation; speech quality depends on device/browser. Test before submission.
