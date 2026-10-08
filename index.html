@@ -114,20 +114,25 @@ function startProfessorNarration(){
  stopSonoSpeech();
  collectSonoSegments();
  updateSonoVoiceControls();
- const first=document.querySelector(current===0?'#hero .hero-copy .eyebrow':'#view [data-sono-narrate]');
+ const first=document.querySelector(current===0?'#hero [data-sono-narrate]':'#view [data-sono-narrate]');
  if(first){sonoVoice.spoken.add(first);speakSono(first.dataset.sonoNarrate,first);}else scheduleSonoNarration(true);
 }
 function replaySonoVoice(){if(!sonoVoice.supported)return;sonoVoice.enabled=true;localStorage.setItem('sonoVoiceEnabled','true');collectSonoSegments();const el=sonoVoice.active||visibleSonoSegments()[0];if(el){sonoVoice.spoken.delete(el);sonoVoice.spoken.add(el);speakSono(el.dataset.sonoNarrate,el);}else if(sonoVoice.last)speakSono(sonoVoice.last);updateSonoVoiceControls();}
 function changeSonoVoice(value){sonoVoice.selected=value;localStorage.setItem('sonoPreferredVoice',value);if(sonoVoice.active)replaySonoVoice();}
 function updateSonoVoiceControls(){const bar=document.getElementById('sonoVoiceControls');if(!bar)return;bar.hidden=!sonoVoice.supported;const btn=document.getElementById('sonoVoiceToggle');if(btn){btn.textContent=sonoVoice.enabled?'🔊 Narration on · Mute':'🔇 Narration off · Unmute';btn.setAttribute('aria-pressed',String(sonoVoice.enabled));}const select=document.getElementById('sonoVoiceSelect');if(select){const voices=voiceChoices();const old=sonoVoice.selected;select.replaceChildren();const auto=document.createElement('option');auto.value='';auto.textContent='Best available English voice';select.appendChild(auto);voices.forEach(v=>{const opt=document.createElement('option');opt.value=v.voiceURI;opt.textContent=v.name+' ('+v.lang+')';select.appendChild(opt)});select.value=voices.some(v=>v.voiceURI===old)?old:'';}const status=document.getElementById('sonoVoiceStatus');if(status)status.textContent=sonoVoice.supported?'Narration follows each instruction as you scroll. Replay any passage; mute at any time.':'This browser does not support speech narration.';}
-function collectSonoSegments(){const root=document.getElementById('view');if(!root)return;
- document.querySelectorAll('#hero .hero-copy .eyebrow, #hero .hero-copy h1, #hero .hero-copy h2, #hero .hero-copy > p, #hero .goal').forEach(el=>{const msg=el.textContent.replace(/\s+/g,' ').trim();if(msg.length>2)el.dataset.sonoNarrate=msg;});
- // Narrate instructor guidance, questions, explanations, clinical status and feedback.
- // Exclude answer buttons, form controls, document facsimiles and duplicated nested text.
- const selector='.preceptor p, .term-detail p, .term-detail h3, #view > h2, #view > h3, #view > p, #view > .stepnote, #view > .muted, #view > .feedback, #view > .feedback p, #view .feedback > strong, #view .feedback > p, #view .feedback > details > summary, #view .capstone-state, #view .readiness-question legend, #view .doc + h3, #view .essential-detail p, #view .term-description, #view .rubric-panel p, #view .rubric-panel h3';
- root.querySelectorAll(selector).forEach(el=>{if(el.dataset.sonoNarrate||el.closest('button,select,fieldset.options,.voice-controls,.doc,.options')||el.closest('[hidden]'))return;const msg=el.textContent.replace(/^Professor Morgan:\s*/,'').replace(/\s+/g,' ').trim();if(msg.length>7&&msg.length<1800)el.dataset.sonoNarrate=msg;});
- // Additional instructor paragraphs inside dynamic instructional cards (but not fictional documents).
- root.querySelectorAll('.preceptor, .term-detail, .feedback').forEach(group=>group.querySelectorAll('p').forEach(el=>{if(!el.dataset.sonoNarrate){const msg=el.textContent.replace(/\s+/g,' ').trim();if(msg.length>7)el.dataset.sonoNarrate=msg;}}));
+function collectSonoSegments(){
+ const root=document.getElementById('view');if(!root)return;
+ // Only narrate instructor introductions, clinically useful explanations, and feedback.
+ // Never narrate directional/UI instructions, glossary terms, forms, options or navigation.
+ const allowed='#hero .hero-copy h1, #hero .hero-copy h2, #hero .hero-copy > p, #view .preceptor p, #view .feedback > p, #view .feedback > strong, #view .capstone-state, #view .rubric-panel p';
+ document.querySelectorAll('#hero [data-sono-narrate], #view [data-sono-narrate]').forEach(el=>{
+   if(!el.matches(allowed))delete el.dataset.sonoNarrate;
+ });
+ document.querySelectorAll(allowed).forEach(el=>{
+   if(el.closest('button,select,.doc,.options,[hidden],.term-detail,.term-list,.essential-detail,.term-description'))return;
+   const msg=el.textContent.replace(/^Professor Morgan:\\s*/,'').replace(/\\s+/g,' ').trim();
+   if(msg.length>15&&msg.length<1800)el.dataset.sonoNarrate=msg;
+ });
 }
 function visibleSonoSegments(){const root=document.getElementById('view');if(!root)return[];return [...document.querySelectorAll('#hero [data-sono-narrate], #view [data-sono-narrate]')].filter(el=>{const r=el.getBoundingClientRect();return r.bottom>95&&r.top<window.innerHeight*.82&&r.height>0&&getComputedStyle(el).visibility!=='hidden';}).sort((a,b)=>a.getBoundingClientRect().top-b.getBoundingClientRect().top);}
 function scheduleSonoNarration(immediate=false){clearTimeout(sonoVoice.timer);sonoVoice.timer=setTimeout(()=>{if(!sonoVoice.enabled||!sonoVoice.supported||document.hidden)return;collectSonoSegments();const visible=visibleSonoSegments();if(sonoVoice.active){if(visible.includes(sonoVoice.active))return;stopSonoSpeech();}const next=visible.find(el=>!sonoVoice.spoken.has(el));if(next){sonoVoice.spoken.add(next);speakSono(next.dataset.sonoNarrate,next);}},immediate?0:180);}
