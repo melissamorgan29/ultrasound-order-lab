@@ -1,7 +1,1 @@
-SONO ORDER LAB — ORIGINAL APPROVED HOMEPAGE DESIGN
-
-This package matches the earlier navy/teal mockup with the original Professor Morgan portrait on the left and five illustrated learning cards. All seven existing learning activities remain available, including advanced cases and phone simulation.
-
-Upload ALL files in this ZIP to the ROOT of your GitHub Pages repository, replacing index.html and adding the JPG files. Do not upload only index.html: the homepage design requires professor-morgan-hero.jpg and module-1.jpg through module-5.jpg.
-
-This is a visual implementation of the mockup, not a pixel-perfect reproduction. Test the live site after publishing.
+Sono Order Lab — scroll-aware narration. Upload index.html to GitHub Pages and retain all JPG images in the repository root. Narration uses built-in device speech synthesis; choose an installed natural/neural female voice if available. Students can mute or replay. Browser restrictions may require a click before audio plays. Scroll guidance is spoken once per lesson view, with feedback spoken when submitted.
